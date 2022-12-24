@@ -4,7 +4,9 @@ import styles from './index.module.css'
 import Image from 'next/image'
 
 export default function Home() {
-  const [animalInput, setAnimalInput] = useState('')
+  const [title, setTitle] = useState('')
+  const [wordList, setWordList] = useState<string[]>([])
+  const [word, setWord] = useState<string>('')
   const [result, setResult] = useState()
 
   async function onSubmit(event) {
@@ -14,12 +16,11 @@ export default function Home() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ animal: animalInput }),
+      body: JSON.stringify({ title, words: wordList }),
     })
     const data = await response.json()
     console.log(data)
     setResult(data.result)
-    setAnimalInput('')
   }
 
   return (
@@ -38,16 +39,47 @@ export default function Home() {
           alt=''
         />
         <h3>Name my pet</h3>
+
         <form onSubmit={onSubmit}>
+          <p>タイトル</p>
           <input
             type='text'
-            name='animal'
-            placeholder='Enter an animal'
-            value={animalInput}
-            onChange={e => setAnimalInput(e.target.value)}
+            name='title'
+            placeholder='Enter an title'
+            value={title}
+            onChange={e => setTitle(e.target.value)}
           />
+          <p>単語</p>
+          <input
+            type='text'
+            name='word'
+            placeholder='Enter an word'
+            value={word}
+            onChange={e => setWord(e.target.value)}
+          />
+          <button
+            type='button'
+            onClick={() => {
+              setWord('')
+              setWordList([...wordList, word])
+            }}
+          >
+            Add +
+          </button>
+          {wordList.map((word, i) => (
+            <p
+              key={i}
+              onClick={() => {
+                setWordList(wordList.filter((_, index) => index !== i))
+              }}
+            >
+              {word}
+            </p>
+          ))}
+
           <input type='submit' value='Generate names' />
         </form>
+
         <div className={styles.result}>{result}</div>
       </main>
     </div>
