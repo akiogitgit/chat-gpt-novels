@@ -8,12 +8,13 @@ const openai = new OpenAIApi(configuration)
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const completion = await openai.createCompletion({
-    model: 'text-davinci-002',
+    model: 'text-davinci-003',
     prompt: generatePrompt(req.body.animal),
     temperature: 0.6,
+    max_tokens: 1000,
   })
   res.status(200).json({ result: completion.data.choices[0].text })
-  // res.status(200).json({ result: completion.data })
+  // res.status(200).json({ result: completion.data.choices })
 }
 
 function generatePrompt(animal) {
@@ -27,5 +28,6 @@ function generatePrompt(animal) {
   // Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
   // Animal: ${capitalizedAnimal}
   // Names:`
-  return `今からあなたは小説を書きます。タイトルは「初登校」です。「学校」、「先生」の単語使って完成させてください`
+  return `今からあなたは小説を書きます。タイトルは「初登校」です。「学校」、「先生」の単語使って完成させてください。`
+  // return `私はごはんが大好きですが、もっと美味しく食べるにはどうすれば良いですか？`
 }
