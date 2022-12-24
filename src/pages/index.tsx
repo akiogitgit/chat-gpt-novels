@@ -4,12 +4,13 @@ import styles from './index.module.css'
 import Image from 'next/image'
 
 export default function Home() {
-  const [title, setTitle] = useState('')
-  const [wordList, setWordList] = useState<string[]>([])
+  const [title, setTitle] = useState('ししゃもと落花生')
+  const [wordList, setWordList] = useState<string[]>(['やまんば'])
   const [word, setWord] = useState<string>('')
-  const [result, setResult] = useState()
+  const [result, setResult] = useState('')
 
-  async function onSubmit(event) {
+  // 小説を作成
+  const onSubmit = async event => {
     event.preventDefault()
     const response = await fetch('/api/generate', {
       method: 'POST',
@@ -23,6 +24,19 @@ export default function Home() {
     setResult(data.result)
   }
 
+  const onSeeMore = async () => {
+    const response = await fetch('/api/generate_for_more', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ previousNovel: result }),
+    })
+    const data = await response.json()
+    console.log(data)
+    const newResult = `${result} \n\n ${data.result}`
+    setResult(newResult)
+  }
   return (
     <div>
       <Head>
@@ -80,7 +94,11 @@ export default function Home() {
           <input type='submit' value='Generate names' />
         </form>
 
-        <div className={styles.result}>{result}</div>
+        <div className={styles.result} style={{ whiteSpace: 'pre-wrap' }}>
+          {result}
+        </div>
+
+        <button onClick={onSeeMore}>See more</button>
       </main>
     </div>
   )
