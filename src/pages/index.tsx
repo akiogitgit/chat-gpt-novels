@@ -4,8 +4,8 @@ import styles from './index.module.css'
 import Image from 'next/image'
 
 export default function Home() {
-  const [title, setTitle] = useState('ししゃもと落花生')
-  const [wordList, setWordList] = useState<string[]>(['やまんば'])
+  const [title, setTitle] = useState('サウナVSサバンナ')
+  const [wordList, setWordList] = useState<string[]>(['オラウータン'])
   const [word, setWord] = useState<string>('')
   const [result, setResult] = useState('')
 
@@ -24,19 +24,20 @@ export default function Home() {
     setResult(data.result)
   }
 
-  const onSeeMore = async () => {
+  const onSeeMore = async (emotion: string) => {
     const response = await fetch('/api/generate_for_more', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ previousNovel: result }),
+      body: JSON.stringify({ previousNovel: result, emotion }),
     })
     const data = await response.json()
     console.log(data)
     const newResult = `${result} \n\n ${data.result}`
     setResult(newResult)
   }
+
   return (
     <div>
       <Head>
@@ -98,7 +99,14 @@ export default function Home() {
           {result}
         </div>
 
-        <button onClick={onSeeMore}>See more</button>
+        {/* <button onClick={onSeeMore}>See more</button> */}
+        <div style={{ display: 'flex', gap: '20px' }}>
+          {['楽観的', '悲観的', '感動的', '残酷で絶望的'].map(emotion => (
+            <button key={emotion} onClick={() => onSeeMore(emotion)}>
+              {emotion}な続きを見る
+            </button>
+          ))}
+        </div>
       </main>
     </div>
   )
