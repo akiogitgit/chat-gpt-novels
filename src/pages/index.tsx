@@ -1,13 +1,25 @@
 import Head from 'next/head'
 import { useState } from 'react'
-import styles from './index.module.css'
 import Image from 'next/image'
-import { Button, Spoiler } from '@mantine/core'
+import {
+  Badge,
+  Button,
+  Flex,
+  Paper,
+  Radio,
+  Space,
+  Spoiler,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core'
+import { useInputState } from '@mantine/hooks'
 
 export default function Home() {
-  const [title, setTitle] = useState('サウナVSサバンナ')
+  const [title, setTitle] = useInputState('サウナVSサバンナ')
   const [wordList, setWordList] = useState<string[]>(['オラウータン'])
-  const [word, setWord] = useState<string>('')
+  const [word, setWord] = useInputState('')
   // const [result, setNovels] = useState('')
   const [novels, setNovels] = useState<string[]>()
   const [hasConsistency, setHasConsistency] = useState(true) // 話の一貫性
@@ -68,108 +80,144 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>OpenAI Quickstart</title>
+        <title>Novel Generater</title>
         <link rel='icon' href='/dog.png' />
       </Head>
 
-      <main className={styles.main}>
-        <Button className='mt-10'>Button</Button>
-        <Image
-          src='/dog.png'
-          className={styles.icon}
-          width={50}
-          height={50}
-          alt=''
-        />
-        <h3>Name my pet</h3>
+      <main className='mx-auto my-10 max-w-800px w-90vw'>
+        {/* <h1 className='bg-gradient-to-r bg-clip-text font-bold from-emerald-500 via-indigo-400 to-violet-600 text-transparent text-center text-60px'>
+          Novel Generator
+        </h1> */}
+        <h1 className='bg-gradient-to-r bg-clip-text font-bold from-emerald-500 via-violet-400 to-blue-600 text-transparent text-center text-60px'>
+          Novel Generator
+        </h1>
+        {/* <h1 className='bg-gradient-to-r bg-clip-text font-bold from-emerald-500 via-blue-400 to-teal-600 text-transparent text-center text-60px'>
+          Novel Generator
+        </h1> */}
+        <form onSubmit={onSubmit} className='mx-auto mt-8 max-w-300px'>
+          <Stack spacing='md'>
+            <TextInput
+              label='タイトル'
+              withAsterisk
+              placeholder='Enter an title'
+              value={title}
+              onChange={setTitle}
+              radius='md'
+              required
+            />
+            <TextInput
+              label='小説で使う単語'
+              placeholder='Enter an word'
+              value={word}
+              onChange={setWord}
+              radius='md'
+            />
 
-        <form onSubmit={onSubmit}>
-          <p>タイトル</p>
-          <input
-            type='text'
-            name='title'
-            placeholder='Enter an title'
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-          />
-          <p>単語</p>
-          <input
-            type='text'
-            name='word'
-            placeholder='Enter an word'
-            value={word}
-            onChange={e => setWord(e.target.value)}
-          />
-          <button
-            type='button'
-            onClick={() => {
-              setWord('')
-              setWordList([...wordList, word])
-            }}
-          >
-            Add +
-          </button>
-          {wordList.map((word, i) => (
-            <p
-              key={i}
+            <Flex gap='sm'>
+              {wordList.map((word, i) => (
+                <Badge
+                  key={i}
+                  onClick={() =>
+                    setWordList(wordList.filter((_, index) => index !== i))
+                  }
+                  // color='cyan'
+                  className='cursor-pointer bg-indigo-100 text-indigo-500 duration-150 hover:(bg-red-200 text-red-500) '
+                >
+                  {word}
+                </Badge>
+              ))}
+            </Flex>
+
+            <Button
+              type='button'
+              // color='cyan'
+              className='bg-indigo-400/90 hover:bg-indigo-400'
               onClick={() => {
-                setWordList(wordList.filter((_, index) => index !== i))
+                setWord('')
+                setWordList([...wordList, word])
               }}
+              disabled={!word}
+              radius='md'
             >
-              {word}
-            </p>
-          ))}
-          <div>
-            <input
-              type='radio'
-              id='Consistency'
-              checked={hasConsistency}
-              onChange={() => setHasConsistency(true)}
-            />
-            <label htmlFor='Consistency'>一貫性がある</label>
-            <input
-              type='radio'
-              id='inconsistent'
-              checked={!hasConsistency}
-              onChange={() => setHasConsistency(false)}
-            />
-            <label htmlFor='inconsistent'>話が変わる</label>
-          </div>
-          <input type='submit' value='Generate names' />
-        </form>
+              Add +
+            </Button>
 
-        {/* <div className={styles.result} style={{ whiteSpace: 'pre-wrap' }}>
-          {result}
-        </div> */}
+            <Flex gap='xl'>
+              <Radio
+                label='一貫性がある'
+                checked={hasConsistency}
+                onChange={() => setHasConsistency(true)}
+                color='indigo'
+              />
+              <Radio
+                label='話が変わる'
+                checked={!hasConsistency}
+                onChange={() => setHasConsistency(false)}
+                color='indigo'
+              />
+            </Flex>
 
-        {novels &&
-          novels.map(res => (
-            <p
-              key={res}
-              className={styles.result}
-              style={{ whiteSpace: 'pre-wrap' }}
+            <Space />
+
+            <button
+              // className={`rounded-full border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)`}
+              className={`${
+                title &&
+                'rounded-full border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)'
+              }`}
             >
-              {res}
-            </p>
-          ))}
-
-        {/* <button onClick={onSeeMore}>See more</button> */}
-        {novels && (
-          <div style={{ display: 'flex', gap: '20px' }}>
-            {/* {['楽観的', '悲観的', '感動的', '残酷で絶望的'].map(emotion => (
-              <button key={emotion} onClick={() => onSeeMore(emotion)}>
-                {emotion}な続きを見る
-              </button>
-            ))} */}
-            {futureTrends.map(future => (
-              <button
-                key={future.label}
-                onClick={() => onSeeMore(future.trend)}
+              <Button
+                type='submit'
+                color='teal'
+                size='xl'
+                radius='xl'
+                className='w-full'
+                disabled={!title}
               >
-                {future.label}な続きを見る
-              </button>
-            ))}
-          </div>
+                Generate
+              </Button>
+            </button>
+          </Stack>
+        </form>
+        <Space h='xl' />
+        {novels && (
+          <>
+            <Paper
+              p='xl'
+              mt='xl'
+              shadow='md'
+              radius='md'
+              // className='bg-emerald-50'
+              className='bg-indigo-50'
+            >
+              {/* <Paper p='xl' mt='xl' shadow='xl' className='bg-gray-50'> */}
+              <Title order={3} weight={600} align='center'>
+                {title}
+              </Title>
+              <Space h='xl' />
+              {novels.map(res => (
+                <p key={res} style={{ whiteSpace: 'pre-wrap' }}>
+                  {res}
+                </p>
+              ))}
+            </Paper>
+
+            <Space h='xl' />
+            <Space h='xl' />
+
+            <div className='grid gap-2 grid-cols-2 md:grid-cols-4'>
+              {futureTrends.map(future => (
+                <Button
+                  color='teal'
+                  key={future.label}
+                  onClick={() => onSeeMore(future.trend)}
+                  radius='md'
+                >
+                  {future.label}な続きを見る
+                </Button>
+              ))}
+            </div>
+          </>
         )}
       </main>
     </div>

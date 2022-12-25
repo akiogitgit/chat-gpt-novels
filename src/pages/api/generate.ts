@@ -21,5 +21,6 @@ const generatePrompt = (title: string, words: string[]) => {
     wordModified += `「${words[i]}」、`
   }
 
-  return `今からあなたは小説を書きます。タイトルは「${title}」です。${wordModified}の単語使って作成して下さい。続きが気になり非常に面白く、会話の多い小説にして下さい`
+  // return `今からあなたは小説を書きます。タイトルは「${title}」です。${wordModified}の単語使って作成して下さい。続きが気になり非常に面白く、会話の多い小説にして下さい。`
+  return `今からあなたは小説を書きます。タイトルは「${title}」です。${wordModified}の単語使って作成して下さい。続きが気になり非常に面白く、会話の多い小説にして下さい。タイトルは書かず、本文から書いてください。`
 }
