@@ -85,15 +85,9 @@ export default function Home() {
       </Head>
 
       <main className='mx-auto my-10 max-w-800px w-90vw'>
-        {/* <h1 className='bg-gradient-to-r bg-clip-text font-bold from-emerald-500 via-indigo-400 to-violet-600 text-transparent text-center text-60px'>
-          Novel Generator
-        </h1> */}
-        <h1 className='bg-gradient-to-r bg-clip-text font-bold from-emerald-500 via-violet-400 to-blue-600 text-transparent text-center text-60px'>
+        <h1 className='bg-gradient-to-r bg-clip-text font-bold from-emerald-500 via-violet-400 to-blue-600 text-transparent text-center text-50px'>
           Novel Generator
         </h1>
-        {/* <h1 className='bg-gradient-to-r bg-clip-text font-bold from-emerald-500 via-blue-400 to-teal-600 text-transparent text-center text-60px'>
-          Novel Generator
-        </h1> */}
         <form onSubmit={onSubmit} className='mx-auto mt-8 max-w-300px'>
           <Stack spacing='md'>
             <TextInput
@@ -106,7 +100,7 @@ export default function Home() {
               required
             />
             <TextInput
-              label='小説で使う単語'
+              label='使う単語'
               placeholder='Enter an word'
               value={word}
               onChange={setWord}
@@ -120,17 +114,15 @@ export default function Home() {
                   onClick={() =>
                     setWordList(wordList.filter((_, index) => index !== i))
                   }
-                  // color='cyan'
-                  className='cursor-pointer bg-indigo-100 text-indigo-500 duration-150 hover:(bg-red-200 text-red-500) '
+                  className='cursor-pointer bg-indigo-100/80 text-indigo-500 duration-150 hover:(bg-indigo-100) '
                 >
-                  {word}
+                  ✕ {word}
                 </Badge>
               ))}
             </Flex>
 
             <Button
               type='button'
-              // color='cyan'
               className='bg-indigo-400/90 hover:bg-indigo-400'
               onClick={() => {
                 setWord('')
@@ -160,7 +152,6 @@ export default function Home() {
             <Space />
 
             <button
-              // className={`rounded-full border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)`}
               className={`${
                 title &&
                 'rounded-full border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)'
@@ -187,10 +178,8 @@ export default function Home() {
               mt='xl'
               shadow='md'
               radius='md'
-              // className='bg-emerald-50'
-              className='bg-indigo-50'
+              className='bg-gray-100'
             >
-              {/* <Paper p='xl' mt='xl' shadow='xl' className='bg-gray-50'> */}
               <Title order={3} weight={600} align='center'>
                 {title}
               </Title>
@@ -205,7 +194,7 @@ export default function Home() {
             <Space h='xl' />
             <Space h='xl' />
 
-            <div className='grid gap-2 grid-cols-2 md:grid-cols-4'>
+            <div className='grid gap-3 grid-cols-2 md:grid-cols-4'>
               {futureTrends.map(future => (
                 <Button
                   color='teal'
