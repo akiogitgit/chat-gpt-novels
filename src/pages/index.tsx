@@ -4,6 +4,7 @@ import {
   Badge,
   Button,
   Flex,
+  Loader,
   Paper,
   Radio,
   Space,
@@ -15,14 +16,17 @@ import { useInputState } from '@mantine/hooks'
 
 export default function Home() {
   const [title, setTitle] = useInputState('')
-  const [wordList, setWordList] = useState<string[]>([])
   const [word, setWord] = useInputState('')
-  const [novel, setNovel] = useState<{ title: string; body: string[] }>()
+  const [wordList, setWordList] = useState<string[]>([])
   const [hasConsistency, setHasConsistency] = useState(true) // 話の一貫性
+  const [novel, setNovel] = useState<{ title: string; body: string[] }>()
+  const [isLoading, setIsLoading] = useState(false)
 
-  // 小説を作成
-  const onSubmit = async event => {
+  // 小説を生成
+  const onGenerateNovel = async event => {
+    setIsLoading(true)
     event.preventDefault()
+
     const response = await fetch('/api/generate', {
       method: 'POST',
       headers: {
@@ -33,9 +37,13 @@ export default function Home() {
 
     const data = await response.json()
     setNovel({ title, body: [data.result] })
+    setIsLoading(false)
   }
 
-  const onSeeMore = async (futureStory: string) => {
+  // 続きを生成
+  const onGenerateContinue = async (futureStory: string) => {
+    setIsLoading(true)
+
     const response = await fetch('/api/generate_for_more', {
       method: 'POST',
       headers: {
@@ -50,17 +58,14 @@ export default function Home() {
         title,
       }),
     })
+
     const data = await response.json()
-    // const newResult = `${result} \n\n ${data.result}`
     const newResult = [...novel.body, data.result]
     setNovel({ title, body: newResult })
+    setIsLoading(false)
   }
 
   const futureTrends = [
-    // { label: '楽観的', trend: '何もかも全て上手く行く' },
-    // { label: '悲観的', trend: '全てが失敗する' },
-    // { label: '感動的', trend: 'お互いに感謝する' },
-    // { label: '残酷で絶望的', trend: '悪党に襲われる' },
     { label: '楽観的', trend: '何もかも全て上手く行き、みんなハッピーになる' },
     { label: '悲観的', trend: '全てが失敗し最悪の展開で、泣いてしまう' },
     { label: '感動的', trend: 'お互いに称えあい、生命に感謝する' },
@@ -78,7 +83,8 @@ export default function Home() {
         <h1 className='bg-gradient-to-r bg-clip-text font-bold from-emerald-500 via-violet-400 to-blue-600 text-transparent text-center text-50px'>
           Novel Generator
         </h1>
-        <form onSubmit={onSubmit} className='mx-auto mt-8 max-w-300px'>
+
+        <form onSubmit={onGenerateNovel} className='mx-auto mt-8 max-w-300px'>
           <Stack spacing='md'>
             <TextInput
               label='タイトル'
@@ -144,6 +150,7 @@ export default function Home() {
             <button
               className={`${
                 title &&
+                !isLoading &&
                 'rounded-full border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)'
               }`}
             >
@@ -153,14 +160,17 @@ export default function Home() {
                 size='xl'
                 radius='xl'
                 className='w-full'
-                disabled={!title}
+                leftIcon={isLoading && <Loader variant='dots' color='indigo' />}
+                disabled={!title || isLoading}
               >
                 小説を生成
               </Button>
             </button>
           </Stack>
         </form>
+
         <Space h='xl' />
+
         {novel && (
           <>
             <Paper
@@ -189,8 +199,12 @@ export default function Home() {
                 <Button
                   color='teal'
                   key={future.label}
-                  onClick={() => onSeeMore(future.trend)}
+                  onClick={() => onGenerateContinue(future.trend)}
                   radius='md'
+                  leftIcon={
+                    isLoading && <Loader variant='dots' color='indigo' />
+                  }
+                  disabled={isLoading}
                 >
                   {future.label}な続きを読む
                 </Button>
