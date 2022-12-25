@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import { useState } from 'react'
-import Image from 'next/image'
 import {
   Badge,
   Button,
@@ -8,20 +7,17 @@ import {
   Paper,
   Radio,
   Space,
-  Spoiler,
   Stack,
-  Text,
   TextInput,
   Title,
 } from '@mantine/core'
 import { useInputState } from '@mantine/hooks'
 
 export default function Home() {
-  const [title, setTitle] = useInputState('サウナVSサバンナ')
-  const [wordList, setWordList] = useState<string[]>(['オラウータン'])
+  const [title, setTitle] = useInputState('')
+  const [wordList, setWordList] = useState<string[]>([])
   const [word, setWord] = useInputState('')
-  // const [result, setNovels] = useState('')
-  const [novels, setNovels] = useState<string[]>()
+  const [novel, setNovel] = useState<{ title: string; body: string[] }>()
   const [hasConsistency, setHasConsistency] = useState(true) // 話の一貫性
 
   // 小説を作成
@@ -34,10 +30,9 @@ export default function Home() {
       },
       body: JSON.stringify({ title, words: wordList }),
     })
+
     const data = await response.json()
-    console.log(data)
-    // setNovels(data.result)
-    setNovels([data.result])
+    setNovel({ title, body: [data.result] })
   }
 
   const onSeeMore = async (futureStory: string) => {
@@ -47,23 +42,18 @@ export default function Home() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        // previousNovel: result,
-        // previousNovel: novels[novels.length - 1],
-
         // 一貫性があるか、展開が変わりやすいか
         previousNovel: hasConsistency
-          ? novels.join('\n\n').slice(-900) // リクエストは1000文字が限度
-          : novels[novels.length - 1],
+          ? novel.body.join('\n\n').slice(-900) // リクエストは1000文字が限度
+          : novel.body[novel.body.length - 1],
         futureStory,
         title,
       }),
     })
     const data = await response.json()
-    console.log('before: ', novels[novels.length - 1])
-    console.log(data)
     // const newResult = `${result} \n\n ${data.result}`
-    const newResult = [...novels, data.result]
-    setNovels(newResult)
+    const newResult = [...novel.body, data.result]
+    setNovel({ title, body: newResult })
   }
 
   const futureTrends = [
@@ -131,7 +121,7 @@ export default function Home() {
               disabled={!word}
               radius='md'
             >
-              Add +
+              追加 +
             </Button>
 
             <Flex gap='xl'>
@@ -142,7 +132,7 @@ export default function Home() {
                 color='indigo'
               />
               <Radio
-                label='話が変わる'
+                label='展開が変わる'
                 checked={!hasConsistency}
                 onChange={() => setHasConsistency(false)}
                 color='indigo'
@@ -165,13 +155,13 @@ export default function Home() {
                 className='w-full'
                 disabled={!title}
               >
-                Generate
+                小説を生成
               </Button>
             </button>
           </Stack>
         </form>
         <Space h='xl' />
-        {novels && (
+        {novel && (
           <>
             <Paper
               p='xl'
@@ -181,10 +171,10 @@ export default function Home() {
               className='bg-gray-100'
             >
               <Title order={3} weight={600} align='center'>
-                {title}
+                {novel.title}
               </Title>
               <Space h='xl' />
-              {novels.map(res => (
+              {novel?.body?.map(res => (
                 <p key={res} style={{ whiteSpace: 'pre-wrap' }}>
                   {res}
                 </p>
@@ -202,7 +192,7 @@ export default function Home() {
                   onClick={() => onSeeMore(future.trend)}
                   radius='md'
                 >
-                  {future.label}な続きを見る
+                  {future.label}な続きを読む
                 </Button>
               ))}
             </div>
