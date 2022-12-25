@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { useState } from 'react'
 import styles from './index.module.css'
 import Image from 'next/image'
+import { Button, Spoiler } from '@mantine/core'
 
 export default function Home() {
   const [title, setTitle] = useState('サウナVSサバンナ')
@@ -72,6 +73,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        <Button className='mt-10'>Button</Button>
         <Image
           src='/dog.png'
           className={styles.icon}
