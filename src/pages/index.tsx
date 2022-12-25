@@ -79,7 +79,7 @@ export default function Home() {
         <link rel='icon' href='/dog.png' />
       </Head>
 
-      <main className='mx-auto my-10 max-w-800px w-90vw'>
+      <main className='mx-auto my-10 max-w-700px w-90vw'>
         <h1 className='bg-gradient-to-r bg-clip-text font-bold from-emerald-500 via-violet-400 to-blue-600 text-transparent text-center text-50px'>
           Novel Generator
         </h1>
@@ -95,63 +95,68 @@ export default function Home() {
               radius='md'
               required
             />
-            <TextInput
-              label='使う単語'
-              placeholder='Enter an word'
-              value={word}
-              onChange={setWord}
-              radius='md'
-            />
-
-            <Flex gap='sm'>
-              {wordList.map((word, i) => (
-                <Badge
-                  key={i}
-                  onClick={() =>
-                    setWordList(wordList.filter((_, index) => index !== i))
-                  }
-                  className='cursor-pointer bg-indigo-100/80 text-indigo-500 duration-150 hover:(bg-indigo-100) '
-                >
-                  ✕ {word}
-                </Badge>
-              ))}
-            </Flex>
-
-            <Button
-              type='button'
-              className='bg-indigo-400/90 hover:bg-indigo-400'
-              onClick={() => {
-                setWord('')
-                setWordList([...wordList, word])
-              }}
-              disabled={!word}
-              radius='md'
-            >
-              追加 +
-            </Button>
-
-            <Flex gap='xl'>
-              <Radio
-                label='一貫性がある'
-                checked={hasConsistency}
-                onChange={() => setHasConsistency(true)}
-                color='indigo'
+            <Stack spacing='xs'>
+              <TextInput
+                label='使う単語'
+                placeholder='Enter an word'
+                value={word}
+                onChange={setWord}
+                radius='md'
               />
-              <Radio
-                label='展開が変わる'
-                checked={!hasConsistency}
-                onChange={() => setHasConsistency(false)}
-                color='indigo'
-              />
-            </Flex>
+
+              <Flex gap='sm'>
+                {wordList.map((word, i) => (
+                  <Badge
+                    key={i}
+                    onClick={() =>
+                      setWordList(wordList.filter((_, index) => index !== i))
+                    }
+                    className='cursor-pointer bg-indigo-100/80 text-indigo-500 duration-150 hover:(bg-indigo-100) '
+                  >
+                    ✕ {word}
+                  </Badge>
+                ))}
+              </Flex>
+
+              <Button
+                type='button'
+                className='bg-indigo-400/90 hover:bg-indigo-400'
+                onClick={() => {
+                  setWord('')
+                  setWordList([...wordList, word])
+                }}
+                disabled={!word}
+                radius='md'
+              >
+                追加 +
+              </Button>
+            </Stack>
+
+            <Stack spacing='xs'>
+              <label className='text-sm'>小説の展開</label>
+              <Flex gap='xl'>
+                <Radio
+                  label='おだやか'
+                  checked={hasConsistency}
+                  onChange={() => setHasConsistency(true)}
+                  color='indigo'
+                />
+                <Radio
+                  label='はげしい'
+                  checked={!hasConsistency}
+                  onChange={() => setHasConsistency(false)}
+                  color='indigo'
+                />
+              </Flex>
+            </Stack>
 
             <Space />
 
             <button
               className={`${
-                title &&
-                !isLoading &&
-                'rounded-full border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)'
+                title && !isLoading
+                  ? 'rounded-full border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)'
+                  : 'cursor-default'
               }`}
             >
               <Button
