@@ -152,11 +152,11 @@ export default function Home() {
 
             <Space />
 
-            <button
+            <div
               className={`${
-                title && !isLoading
-                  ? 'rounded-full border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)'
-                  : 'cursor-default'
+                title &&
+                !isLoading &&
+                'rounded-full border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)'
               }`}
             >
               <Button
@@ -170,7 +170,7 @@ export default function Home() {
               >
                 小説を生成
               </Button>
-            </button>
+            </div>
           </Stack>
         </form>
 
