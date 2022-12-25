@@ -59,9 +59,9 @@ export default function Home() {
     // { label: '感動的', trend: 'お互いに感謝する' },
     // { label: '残酷で絶望的', trend: '悪党に襲われる' },
     { label: '楽観的', trend: '何もかも全て上手く行き、みんなハッピーになる' },
-    { label: '悲観的', trend: '全てが失敗し、泣いてしまう' },
-    { label: '感動的', trend: 'お互いに感謝し、胸が熱くなる' },
-    { label: '絶望的', trend: '悪党に襲われ、絶望する' },
+    { label: '悲観的', trend: '全てが失敗し最悪の展開で、泣いてしまう' },
+    { label: '感動的', trend: 'お互いに称えあい、生命に感謝する' },
+    { label: '絶望的', trend: '悪党に襲われる' },
   ]
 
   return (
