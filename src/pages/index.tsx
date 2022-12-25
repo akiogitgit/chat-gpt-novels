@@ -7,7 +7,9 @@ export default function Home() {
   const [title, setTitle] = useState('サウナVSサバンナ')
   const [wordList, setWordList] = useState<string[]>(['オラウータン'])
   const [word, setWord] = useState<string>('')
-  const [result, setResult] = useState('')
+  // const [result, setNovels] = useState('')
+  const [novels, setNovels] = useState<string[]>()
+  const [hasConsistency, setHasConsistency] = useState(true) // 話の一貫性
 
   // 小説を作成
   const onSubmit = async event => {
@@ -21,22 +23,46 @@ export default function Home() {
     })
     const data = await response.json()
     console.log(data)
-    setResult(data.result)
+    // setNovels(data.result)
+    setNovels([data.result])
   }
 
-  const onSeeMore = async (emotion: string) => {
+  const onSeeMore = async (futureStory: string) => {
     const response = await fetch('/api/generate_for_more', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ previousNovel: result, emotion }),
+      body: JSON.stringify({
+        // previousNovel: result,
+        // previousNovel: novels[novels.length - 1],
+
+        // 一貫性があるか、展開が変わりやすいか
+        previousNovel: hasConsistency
+          ? novels.join('\n\n').slice(-900) // リクエストは1000文字が限度
+          : novels[novels.length - 1],
+        futureStory,
+        title,
+      }),
     })
     const data = await response.json()
+    console.log('before: ', novels[novels.length - 1])
     console.log(data)
-    const newResult = `${result} \n\n ${data.result}`
-    setResult(newResult)
+    // const newResult = `${result} \n\n ${data.result}`
+    const newResult = [...novels, data.result]
+    setNovels(newResult)
   }
+
+  const futureTrends = [
+    // { label: '楽観的', trend: '何もかも全て上手く行く' },
+    // { label: '悲観的', trend: '全てが失敗する' },
+    // { label: '感動的', trend: 'お互いに感謝する' },
+    // { label: '残酷で絶望的', trend: '悪党に襲われる' },
+    { label: '楽観的', trend: '何もかも全て上手く行き、みんなハッピーになる' },
+    { label: '悲観的', trend: '全てが失敗し、泣いてしまう' },
+    { label: '感動的', trend: 'お互いに感謝し、胸が熱くなる' },
+    { label: '絶望的', trend: '悪党に襲われ、絶望する' },
+  ]
 
   return (
     <div>
@@ -91,22 +117,58 @@ export default function Home() {
               {word}
             </p>
           ))}
-
+          <div>
+            <input
+              type='radio'
+              id='Consistency'
+              checked={hasConsistency}
+              onChange={() => setHasConsistency(true)}
+            />
+            <label htmlFor='Consistency'>一貫性がある</label>
+            <input
+              type='radio'
+              id='inconsistent'
+              checked={!hasConsistency}
+              onChange={() => setHasConsistency(false)}
+            />
+            <label htmlFor='inconsistent'>話が変わる</label>
+          </div>
           <input type='submit' value='Generate names' />
         </form>
 
-        <div className={styles.result} style={{ whiteSpace: 'pre-wrap' }}>
+        {/* <div className={styles.result} style={{ whiteSpace: 'pre-wrap' }}>
           {result}
-        </div>
+        </div> */}
+
+        {novels &&
+          novels.map(res => (
+            <p
+              key={res}
+              className={styles.result}
+              style={{ whiteSpace: 'pre-wrap' }}
+            >
+              {res}
+            </p>
+          ))}
 
         {/* <button onClick={onSeeMore}>See more</button> */}
-        <div style={{ display: 'flex', gap: '20px' }}>
-          {['楽観的', '悲観的', '感動的', '残酷で絶望的'].map(emotion => (
-            <button key={emotion} onClick={() => onSeeMore(emotion)}>
-              {emotion}な続きを見る
-            </button>
-          ))}
-        </div>
+        {novels && (
+          <div style={{ display: 'flex', gap: '20px' }}>
+            {/* {['楽観的', '悲観的', '感動的', '残酷で絶望的'].map(emotion => (
+              <button key={emotion} onClick={() => onSeeMore(emotion)}>
+                {emotion}な続きを見る
+              </button>
+            ))} */}
+            {futureTrends.map(future => (
+              <button
+                key={future.label}
+                onClick={() => onSeeMore(future.trend)}
+              >
+                {future.label}な続きを見る
+              </button>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   )
