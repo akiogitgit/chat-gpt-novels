@@ -7,7 +7,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     prompt: generatePrompt(req.body.title, req.body.words),
     temperature: 0.6,
     // max_tokens: 1000,
-    max_tokens: 100,
+    max_tokens: 300,
   })
   // 。\n\n「○○」\n\n　このようなレスポンスになるので対策。
   res.status(200).json({
