@@ -92,16 +92,26 @@ export default function Home() {
 
           <div className='grid gap-3 grid-cols-2 md:grid-cols-4'>
             {futureTrends.map(future => (
-              <Button
-                color='teal'
+              <div
                 key={future.label}
-                onClick={() => onGenerateContinue(future.trend)}
-                radius='md'
-                leftIcon={isLoading && <Loader variant='dots' color='indigo' />}
-                disabled={isLoading}
+                className={`${
+                  !isLoading &&
+                  'rounded-10px border-emerald-700 border-b-4 hover:(border-white transform translate-y-4px)'
+                }`}
               >
-                {future.label}な続きを読む
-              </Button>
+                <Button
+                  color='teal'
+                  onClick={() => onGenerateContinue(future.trend)}
+                  radius='md'
+                  leftIcon={
+                    isLoading && <Loader variant='dots' color='indigo' />
+                  }
+                  disabled={isLoading}
+                  className='w-full'
+                >
+                  {future.label}な続きを読む
+                </Button>
+              </div>
             ))}
           </div>
         </>
