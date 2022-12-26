@@ -10,38 +10,44 @@ import {
 } from '@mantine/core'
 import { useInputState } from '@mantine/hooks'
 import { FC, useState } from 'react'
-import { useWindowScroll } from '@mantine/hooks'
 
 type Props = {
   setNovel: (novel) => void
+  onScrollToBottom: () => void
 }
 
-export const NovelForm: FC<Props> = ({ setNovel }) => {
+export const NovelForm: FC<Props> = ({ setNovel, onScrollToBottom }) => {
   const [title, setTitle] = useInputState('')
   const [word, setWord] = useInputState('')
   const [wordList, setWordList] = useState<string[]>([])
   const [hasConsistency, setHasConsistency] = useState(true) // 話の一貫性
   const [isLoading, setIsLoading] = useState(false)
 
-  const [scroll, scrollTo] = useWindowScroll()
-
   // 小説を生成
   const onGenerateNovel = async event => {
     setIsLoading(true)
     event.preventDefault()
 
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title, words: wordList }),
-    })
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, words: wordList }),
+      })
 
-    const data = await response.json()
-    setNovel({ title, hasConsistency, body: [data.result] })
+      const data = await response.json()
+      setNovel({ title, hasConsistency, body: [data.result] })
+      onScrollToBottom()
+
+      setTitle('')
+      setWord('')
+      setWordList([])
+    } catch (e) {
+      console.error(e)
+    }
     setIsLoading(false)
-    scrollTo({ y: 500 })
   }
 
   return (
@@ -94,7 +100,7 @@ export const NovelForm: FC<Props> = ({ setNovel }) => {
         </Stack>
 
         <Stack spacing='xs'>
-          <label className='text-sm'>小説の展開</label>
+          <label className='font-weight-500 text-sm'>小説の展開</label>
           <Flex gap='xl'>
             <Radio
               label='おだやか'
