@@ -20,6 +20,7 @@ const generatePrompt = (title: string, words: string[]) => {
   for (let i = 0; i < words.length; i++) {
     wordModified += `「${words[i]}」、`
   }
+  if (words.length) wordModified += 'の単語使って作成して下さい。'
 
-  return `今からあなたは小説を書きます。タイトルは「${title}」です。${wordModified}の単語使って作成して下さい。続きが気になり非常に面白く、会話の多い小説にして下さい。タイトルは書かず、本文から書いてください。`
+  return `今からあなたは小説を書きます。タイトルは「${title}」です。${wordModified}続きが気になり非常に面白く、会話の多い小説にして下さい。タイトルは書かず、本文から書いてください。`
 }
