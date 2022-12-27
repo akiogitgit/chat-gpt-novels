@@ -20,7 +20,6 @@ export const NovelForm: FC<Props> = ({ setNovel, onScrollToBottom }) => {
   const [title, setTitle] = useInputState('')
   const [word, setWord] = useInputState('')
   const [wordList, setWordList] = useState<string[]>([])
-  const [hasConsistency, setHasConsistency] = useState(true) // 話の一貫性
   const [isLoading, setIsLoading] = useState(false)
 
   // 小説を生成
@@ -38,7 +37,7 @@ export const NovelForm: FC<Props> = ({ setNovel, onScrollToBottom }) => {
       })
 
       const data = await response.json()
-      setNovel({ title, hasConsistency, body: [data.result] })
+      setNovel({ title, body: [data.result] })
       onScrollToBottom()
 
       setTitle('')
@@ -97,24 +96,6 @@ export const NovelForm: FC<Props> = ({ setNovel, onScrollToBottom }) => {
           >
             追加 +
           </Button>
-        </Stack>
-
-        <Stack spacing='xs'>
-          <label className='font-weight-500 text-sm'>小説の展開</label>
-          <Flex gap='xl'>
-            <Radio
-              label='おだやか'
-              checked={hasConsistency}
-              onChange={() => setHasConsistency(true)}
-              color='indigo'
-            />
-            <Radio
-              label='はげしい'
-              checked={!hasConsistency}
-              onChange={() => setHasConsistency(false)}
-              color='indigo'
-            />
-          </Flex>
         </Stack>
 
         <Space />

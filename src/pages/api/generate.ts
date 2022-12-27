@@ -4,6 +4,8 @@ import { openai } from '../../libs/openai'
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const completion = await openai.createCompletion({
     model: 'text-davinci-003',
+    // model: 'text-curie-001',
+    // model: 'text-babbage-001',
     prompt: generatePrompt(req.body.title, req.body.words),
     temperature: 0.6,
     max_tokens: 300,
