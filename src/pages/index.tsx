@@ -38,10 +38,7 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          // 一貫性があるか、展開が変わりやすいか
-          previousNovel: novel.hasConsistency
-            ? novel.body.join('\n\n').slice(-900) // リクエストは1000文字が限度
-            : novel.body[novel.body.length - 1],
+          previousNovel: novel.body[novel.body.length - 1],
           futureStory,
           title: novel.title,
         }),
