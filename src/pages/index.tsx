@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Loader, Paper, Space, Title } from '@mantine/core'
 import { Layout } from '../components/Layout'
 import { NovelForm } from '../components/NovelForm'
@@ -57,6 +57,11 @@ export default function Home() {
     setIsLoading(false)
   }
 
+  // 何故か、初めに実行しないとopenAIがエラーを返すので、一度だけ実行
+  useEffect(() => {
+    fetch('/api/test')
+  }, [])
+
   return (
     <Layout>
       <div className='text-center'>
@@ -114,7 +119,7 @@ export default function Home() {
         </>
       )}
 
-      <div id='bottom-of-site' ref={ref} />
+      <div id='bottom-of-site' ref={ref} aria-hidden={true} />
     </Layout>
   )
 }
