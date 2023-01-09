@@ -1,37 +1,25 @@
-# OpenAI API Quickstart - Node.js example app
+# Novel Generator
 
-This is an example pet name generator app used in the OpenAI API [quickstart tutorial](https://beta.openai.com/docs/quickstart). It uses the [Next.js](https://nextjs.org/) framework with [React](https://reactjs.org/). Check out the tutorial or follow the instructions below to get set up.
+## 概要
+話の展開を選択できる小説生成アプリ「Novel Generator」
 
-## Setup
 
-1. If you don’t have Node.js installed, [install it from here](https://nodejs.org/en/)
+## 使い方
+1. 作成する小説の`タイトル`を入力する
+2. その小説で`使う単語`があれば入力し、追加する(複数入力可)
+3. `小説を生成`ボタンを押す
+4. 入力した内容をもとに、小説が生成される
+5. 話の続きを生成したいならば`6`に進む
+6. 以下の展開で小説の続き生成することが出来るので、選択する
+- 楽観的
+- 悲観的
+- 感動的
+- 絶望的
+7. `5~6`を繰り返す
 
-2. Clone this repository
-
-3. Navigate into the project directory
-
-   ```bash
-   $ cd openai-quickstart-node
-   ```
-
-4. Install the requirements
-
-   ```bash
-   $ npm install
-   ```
-
-5. Make a copy of the example environment variables file
-
-   ```bash
-   $ cp .env.example .env
-   ```
-
-6. Add your [API key](https://beta.openai.com/account/api-keys) to the newly created `.env` file
-
-7. Run the app
-
-   ```bash
-   $ npm run dev
-   ```
-
-You should now be able to access the app at [http://localhost:3000](http://localhost:3000)! For the full context behind this example app, check out the [tutorial](https://beta.openai.com/docs/quickstart).
+## 使用技術
+- chatGPT
+- Next.js
+- TypeScript
+- Mantine
+- windi css
