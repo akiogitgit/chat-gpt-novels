@@ -2,6 +2,8 @@
 
 ## 概要
 話の展開を選択できる小説生成アプリ「Novel Generator」
+![image](https://user-images.githubusercontent.com/88410576/211320282-965e0432-5b5b-4b04-b397-f8348a3ca399.png)
+![image](https://user-images.githubusercontent.com/88410576/211320406-af39d5d5-97f4-4134-9689-fabf6a9fb588.png)
 
 
 ## 使い方
